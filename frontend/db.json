@@ -1,0 +1,123 @@
+{
+  "productos": [
+    {
+      "id": "1",
+      "codigo_prod": "A001",
+      "nombre": "IGOL PLUS - 4,5 lts",
+      "descripcion": "Aceite de motor premium para autos.",
+      "marca": "Total",
+      "categoria": "Lubricantes",
+      "stock": 5,
+      "precio": 33000,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "2",
+      "codigo_prod": "B002",
+      "nombre": "Martillo carpintero",
+      "descripcion": "Martillo de acero forjado con mango antideslizante.",
+      "marca": "Stanley",
+      "categoria": "Herramientas",
+      "stock": 3,
+      "precio": 8490,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "3",
+      "codigo_prod": "C003",
+      "nombre": "Taladro eléctrico 500W",
+      "descripcion": "Taladro percutor de 500W ideal para uso doméstico.",
+      "marca": "Bosch",
+      "categoria": "Eléctricas",
+      "stock": 0,
+      "precio": 45990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "4",
+      "codigo_prod": "D004",
+      "nombre": "Juego de destornilladores",
+      "descripcion": "Set de 6 destornilladores de diferentes tamaños.",
+      "marca": "Black & Decker",
+      "categoria": "Herramientas",
+      "stock": 10,
+      "precio": 15990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "5",
+      "codigo_prod": "E005",
+      "nombre": "Cinta métrica 5m",
+      "descripcion": "Cinta métrica retráctil de 5 metros con bloqueo.",
+      "marca": "Stanley",
+      "categoria": "Herramientas",
+      "stock": 15,
+      "precio": 2990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "6",
+      "codigo_prod": "F006",
+      "nombre": "Pintura acrílica blanca 1L",
+      "descripcion": "Pintura acrílica de alta calidad, ideal para interiores.",
+      "marca": "Sherwin-Williams",
+      "categoria": "Pinturas",
+      "stock": 8,
+      "precio": 12990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "7",
+      "codigo_prod": "G007",
+      "nombre": "Escalera plegable de aluminio 3 peldaños",
+      "descripcion": "Escalera ligera y resistente, fácil de almacenar.",
+      "marca": "Telescopic",
+      "categoria": "Herramientas",
+      "stock": 2,
+      "precio": 59990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "8",
+      "codigo_prod": "H008",
+      "nombre": "Guantes de trabajo de cuero",
+      "descripcion": "Guantes resistentes al desgaste, ideales para trabajos pesados.",
+      "marca": "Carhartt",
+      "categoria": "Seguridad",
+      "stock": 20,
+      "precio": 4990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "9",
+      "codigo_prod": "I009",
+      "nombre": "Lámpara LED recargable",
+      "descripcion": "Lámpara portátil con batería recargable, ideal para camping.",
+      "marca": "Philips",
+      "categoria": "Iluminación",
+      "stock": 6,
+      "precio": 24990,
+      "img": "https://via.placeholder.com/150"
+    },
+    {
+      "id": "10",
+      "codigo_prod": "J010",
+      "nombre": "Caja de herramientas metálica",
+      "descripcion": "Caja de herramientas robusta con múltiples compartimentos.",
+      "marca": "Craftsman",
+      "categoria": "Almacenamiento",
+      "stock": 4,
+      "precio": 19990,
+      "img": "https://via.placeholder.com/150"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "fa84",
+      "nombre": "Prueba",
+      "email": "prueba@gmail.com",
+      "password": "1234"
+    }
+  ],
+  "pedidos": []
+}

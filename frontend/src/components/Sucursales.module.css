@@ -1,0 +1,36 @@
+.sucursalesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.sucursalCard {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0002;
+  border: 2.5px solid #1976d2;
+  padding: 32px 28px 24px 28px;
+  min-width: 280px;
+  max-width: 340px;
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+.sucursalCard:hover {
+  box-shadow: 0 8px 32px #1976d244;
+  border-color: #1565c0;
+}
+.sucursalNombre {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+.sucursalDato {
+  font-size: 1.08rem;
+  color: #234;
+  margin-bottom: 7px;
+}
