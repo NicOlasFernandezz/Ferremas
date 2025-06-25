@@ -2,23 +2,32 @@ import React, { useEffect, useState } from 'react';
 
 const API_URL = 'http://127.0.0.1:8000/productos/'; // URLS para backend
 const PEDIDOS_URL = 'http://127.0.0.1:8000/pedidos/'; 
+const SUCURSAL_URL = 'http://127.0.0.1:8000/sucursal/';
 
 function AdminProductos() {
   const [productos, setProductos] = useState([]);
-  const [nuevoProducto, setNuevoProducto] = useState({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', img: '' });
+  const [nuevoProducto, setNuevoProducto] = useState({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', sucursal_id: '' });
   const [editando, setEditando] = useState(null);
-  const [editProducto, setEditProducto] = useState({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', img: '' });
+  const [editProducto, setEditProducto] = useState({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', sucursal_id: '' });
+  const [sucursales, setSucursales] = useState([]);
   const [mostrarPedidos, setMostrarPedidos] = useState(false);
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
     fetchProductos();
+    fetchSucursales();
   }, []);
 
   const fetchProductos = async () => {
     const res = await fetch(API_URL);
     const data = await res.json();
     setProductos(data);
+  };
+
+  const fetchSucursales = async () => {
+    const res = await fetch(SUCURSAL_URL);
+    const data = await res.json();
+    setSucursales(data);
   };
 
   const fetchPedidos = async () => {
@@ -43,10 +52,11 @@ function AdminProductos() {
       body: JSON.stringify({
         ...nuevoProducto,
         precio: Number(nuevoProducto.precio),
-        stock: Number(nuevoProducto.stock)
+        stock: Number(nuevoProducto.stock),
+        sucursal_id: Number(nuevoProducto.sucursal_id)
       }),
     });
-    setNuevoProducto({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', img: '' });
+    setNuevoProducto({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', sucursal_id: '' });
     fetchProductos();
   };
 
@@ -57,19 +67,34 @@ function AdminProductos() {
 
   const handleEdit = (producto) => {
     setEditando(producto.id);
-    setEditProducto({ ...producto });
+    setEditProducto({
+      codigo_prod: producto.codigo_prod,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      descripcion: producto.descripcion,
+      marca: producto.marca,
+      categoria: producto.categoria,
+      stock: producto.stock,
+      sucursal_id: producto.sucursal?.id || ''
+    });
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    const body = {
+      codigo_prod: editProducto.codigo_prod,
+      nombre: editProducto.nombre,
+      precio: Number(editProducto.precio),
+      descripcion: editProducto.descripcion,
+      marca: editProducto.marca,
+      categoria: editProducto.categoria,
+      stock: Number(editProducto.stock),
+      sucursal_id: Number(editProducto.sucursal_id)
+    };
     await fetch(`${API_URL}${editando}/`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...editProducto,
-        precio: Number(editProducto.precio),
-        stock: Number(editProducto.stock)
-      }),
+      body: JSON.stringify(body),
     });
     setEditando(null);
     fetchProductos();
@@ -158,7 +183,12 @@ function AdminProductos() {
         <input name="marca" placeholder="Marca" value={nuevoProducto.marca} onChange={handleChange} required style={{ minWidth: 80 }} />
         <input name="categoria" placeholder="Categoría" value={nuevoProducto.categoria} onChange={handleChange} required style={{ minWidth: 100 }} />
         <input name="stock" placeholder="Stock" value={nuevoProducto.stock} onChange={handleChange} required type="number" min="0" style={{ minWidth: 60 }} />
-        <input name="img" placeholder="URL Imagen" value={nuevoProducto.img} onChange={handleChange} style={{ minWidth: 120 }} />
+        <select name="sucursal_id" value={nuevoProducto.sucursal_id} onChange={handleChange} required style={{ minWidth: 120 }}>
+          <option value="">Selecciona Sucursal</option>
+          {sucursales.map((s) => (
+            <option key={s.id} value={s.id}>{s.nombre}</option>
+          ))}
+        </select>
         <button type="submit">Crear</button>
       </form>
       <table border="1" cellPadding="8" style={{ width: '100%', fontSize: 14 }}>
@@ -172,7 +202,7 @@ function AdminProductos() {
             <th>Marca</th>
             <th>Categoría</th>
             <th>Stock</th>
-            <th>Imagen</th>
+            <th>Sucursal</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -231,9 +261,14 @@ function AdminProductos() {
               </td>
               <td>
                 {editando === producto.id ? (
-                  <input name="img" value={editProducto.img} onChange={handleEditChange} />
+                  <select name="sucursal_id" value={editProducto.sucursal_id} onChange={handleEditChange} required>
+                    <option value="">Selecciona Sucursal</option>
+                    {sucursales.map((s) => (
+                      <option key={s.id} value={s.id}>{s.nombre}</option>
+                    ))}
+                  </select>
                 ) : (
-                  <img src={producto.img} alt={producto.nombre} style={{ width: 40 }} />
+                  producto.sucursal?.nombre || ''
                 )}
               </td>
               <td>
