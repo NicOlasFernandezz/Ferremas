@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const API_URL = "http://127.0.0.1:8000/productos/";
+const SUCURSAL_URL = "http://127.0.0.1:8000/sucursal/";
 
 export default function Catalogo({ onAdd, carrito = [] }) {
   const [productos, setProductos] = useState([]);
@@ -8,6 +9,8 @@ export default function Catalogo({ onAdd, carrito = [] }) {
   const [categoria, setCategoria] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
+  const [sucursal, setSucursal] = useState("");
+  const [sucursales, setSucursales] = useState([]);
 
   useEffect(() => {
     fetch(API_URL)
@@ -19,6 +22,10 @@ export default function Catalogo({ onAdd, carrito = [] }) {
         else setProductos([]);
       })
       .catch(() => setProductos([]));
+    fetch(SUCURSAL_URL)
+      .then((res) => res.json())
+      .then((data) => setSucursales(data))
+      .catch(() => setSucursales([]));
   }, []);
 
   // Obtener categorías únicas
@@ -26,7 +33,7 @@ export default function Catalogo({ onAdd, carrito = [] }) {
     ...new Set(productos.map((p) => p.categoria))
   ];
 
-  // Filtrar productos por búsqueda, categoría y precio
+  // Filtrar productos por búsqueda, categoría, precio y sucursal
   const productosFiltrados = productos.filter((producto) => {
     const coincideBusqueda =
       producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -35,7 +42,8 @@ export default function Catalogo({ onAdd, carrito = [] }) {
     const coincideCategoria = categoria ? producto.categoria === categoria : true;
     const coincidePrecioMin = precioMin ? producto.precio >= parseInt(precioMin) : true;
     const coincidePrecioMax = precioMax ? producto.precio <= parseInt(precioMax) : true;
-    return coincideBusqueda && coincideCategoria && coincidePrecioMin && coincidePrecioMax;
+    const coincideSucursal = sucursal ? (producto.sucursal && (producto.sucursal.id === Number(sucursal))) : true;
+    return coincideBusqueda && coincideCategoria && coincidePrecioMin && coincidePrecioMax && coincideSucursal;
   });
 
   // Obtener cantidad en carrito para cada producto
@@ -63,6 +71,16 @@ export default function Catalogo({ onAdd, carrito = [] }) {
           <option value="">Todas las categorías</option>
           {categorias.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+        <select
+          value={sucursal}
+          onChange={e => setSucursal(e.target.value)}
+          style={{ padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc", minWidth: 180 }}
+        >
+          <option value="">Todas las sucursales</option>
+          {sucursales.map((s) => (
+            <option key={s.id} value={s.id}>{s.nombre}</option>
           ))}
         </select>
         <input
@@ -95,6 +113,7 @@ export default function Catalogo({ onAdd, carrito = [] }) {
                 <h3>{producto.nombre}</h3>
                 <p><strong>Marca:</strong> {producto.marca}</p>
                 <p><strong>Categoría:</strong> {producto.categoria}</p>
+                <p><strong>Sucursal:</strong> {producto.sucursal?.nombre || ''}</p>
                 <p>{producto.descripcion}</p>
                 <p><strong>Precio:</strong> ${producto.precio}</p>
                 <p><strong>Stock:</strong> {producto.stock > 0 ? producto.stock : <span style={{color: 'red'}}>Agotado</span>}</p>

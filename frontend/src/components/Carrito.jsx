@@ -7,15 +7,15 @@ export default function Carrito({ carrito, onRemove, onClear, onClose, onUpdateQ
   const anchoCarrito = 370;
   const navigate = useNavigate();
 
-  // Calcular posición debajo del botón, usando position: fixed y evitando desbordes
+  // Calcular posición debajo del botón
   useEffect(() => {
     if (anchorRef && anchorRef.current) {
       const rect = anchorRef.current.getBoundingClientRect();
       let left = rect.left;
-      // Si el carrito se sale de la pantalla, ajusta a la izquierda
+      
       if (left + anchoCarrito > window.innerWidth) {
-        left = window.innerWidth - anchoCarrito - 16; // 16px de margen derecho
-        if (left < 0) left = 8; // margen izquierdo mínimo
+        left = window.innerWidth - anchoCarrito - 16; 
+        if (left < 0) left = 8; 
       }
       setPos({
         top: rect.bottom + 8,
