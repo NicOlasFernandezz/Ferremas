@@ -4,10 +4,14 @@ import styles from "./Sucursales.module.css";
 const API_URL = "http://127.0.0.1:8000/sucursal/";
 
 export default function Sucursales() {
+  //Sucursales obtenidas del backend
   const [sucursales, setSucursales] = useState([]);
+  //mostrar si está cargando
   const [loading, setLoading] = useState(true);
+  //mostrar errores de carga
   const [error, setError] = useState(null);
 
+  // useEffect para cargar las sucursales
   useEffect(() => {
     fetch(API_URL)
       .then((res) => {
@@ -17,6 +21,7 @@ export default function Sucursales() {
       .then((data) => {
         console.log('Respuesta sucursales:', data); // DEBUG
         let sucursalesArray = [];
+        // Manejo flexible de la respuesta según el formato recibido
         if (Array.isArray(data)) {
           sucursalesArray = data;
         } else if (Array.isArray(data.sucursales)) {

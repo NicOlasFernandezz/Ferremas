@@ -39,7 +39,7 @@ export default function FinalizarCompra() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Guardar pedido en json-server
+    // Guardar pedido 
     const pedido = {
       carrito,
       total,

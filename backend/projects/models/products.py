@@ -8,7 +8,7 @@ class Producto(models.Model):
     marca = models.CharField(max_length=100)
     categoria = models.CharField(max_length=50)
     stock = models.IntegerField()
-    precio = models.DecimalField(max_digits=10, decimal_places=3)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
     sucursal = models.ForeignKey('Sucursal', on_delete=models.CASCADE, related_name='productos')
 
 

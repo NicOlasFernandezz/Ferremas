@@ -16,7 +16,7 @@ export default function Catalogo({ onAdd, carrito = [] }) {
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
-        // Soporta respuesta como array o como objeto con key productos
+        // Verificar si data es un array o un objeto con productos
         if (Array.isArray(data)) setProductos(data);
         else if (data && Array.isArray(data.productos)) setProductos(data.productos);
         else setProductos([]);
@@ -28,12 +28,12 @@ export default function Catalogo({ onAdd, carrito = [] }) {
       .catch(() => setSucursales([]));
   }, []);
 
-  // Obtener categorías únicas
+  // Obtener categorias
   const categorias = [
     ...new Set(productos.map((p) => p.categoria))
   ];
 
-  // Filtrar productos por búsqueda, categoría, precio y sucursal
+  // Filtrar productos por busqueda, categoria, precio y sucursal
   const productosFiltrados = productos.filter((producto) => {
     const coincideBusqueda =
       producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||

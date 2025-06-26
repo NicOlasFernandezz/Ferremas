@@ -71,7 +71,7 @@ function Home() {
 }
 
 function Admin() {
-  // Obtener el email del usuario autenticado desde localStorage
+  // Obtener el email del usuario 
   const email = localStorage.getItem('userEmail');
   // Solo permitir acceso si el email es de admin
   if (!email || !email.endsWith('@admin.com')) {

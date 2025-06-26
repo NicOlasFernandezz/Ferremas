@@ -5,6 +5,7 @@ const PEDIDOS_URL = 'http://127.0.0.1:8000/pedidos/';
 const SUCURSAL_URL = 'http://127.0.0.1:8000/sucursal/';
 
 function AdminProductos() {
+  // Estados para productos, sucursales, pedidos y formularios
   const [productos, setProductos] = useState([]);
   const [nuevoProducto, setNuevoProducto] = useState({ codigo_prod: '', nombre: '', precio: '', descripcion: '', marca: '', categoria: '', stock: '', sucursal_id: '' });
   const [editando, setEditando] = useState(null);
@@ -18,32 +19,38 @@ function AdminProductos() {
     fetchSucursales();
   }, []);
 
+  // Obtiene la lista de productos desde el backend
   const fetchProductos = async () => {
     const res = await fetch(API_URL);
     const data = await res.json();
     setProductos(data);
   };
 
+  // Obtiene la lista de sucursales desde el backend
   const fetchSucursales = async () => {
     const res = await fetch(SUCURSAL_URL);
     const data = await res.json();
     setSucursales(data);
   };
 
+  // Obtiene la lista de pedidos desde el backend
   const fetchPedidos = async () => {
     const res = await fetch(PEDIDOS_URL);
     const data = await res.json();
     setPedidos(data);
   };
 
+  // cambio de los inputs formulario de nuevo producto
   const handleChange = (e) => {
     setNuevoProducto({ ...nuevoProducto, [e.target.name]: e.target.value });
   };
 
+  // cambio input formulario de edición de producto
   const handleEditChange = (e) => {
     setEditProducto({ ...editProducto, [e.target.name]: e.target.value });
   };
 
+  // Crea un nuevo producto en el backend
   const handleCreate = async (e) => {
     e.preventDefault();
     await fetch(API_URL, {
@@ -60,11 +67,13 @@ function AdminProductos() {
     fetchProductos();
   };
 
+  // Elimina un producto por su id
   const handleDelete = async (id) => {
     await fetch(`${API_URL}${id}/`, { method: 'DELETE' });
     fetchProductos();
   };
 
+  // Prepara el formulario para editar un producto existente
   const handleEdit = (producto) => {
     setEditando(producto.id);
     setEditProducto({
@@ -79,6 +88,7 @@ function AdminProductos() {
     });
   };
 
+  // Actualiza un producto existente en el backend
   const handleUpdate = async (e) => {
     e.preventDefault();
     const body = {
@@ -100,11 +110,13 @@ function AdminProductos() {
     fetchProductos();
   };
 
+  // Elimina un pedido por su id
   const handleDeletePedido = async (id) => {
     await fetch(`${PEDIDOS_URL}${id}/`, { method: 'DELETE' });
     fetchPedidos();
   };
 
+  // Marca un pedido como entregado
   const handleMarcarEntregado = async (id) => {
     const pedido = pedidos.find((p) => p.id === id);
     if (!pedido) return;

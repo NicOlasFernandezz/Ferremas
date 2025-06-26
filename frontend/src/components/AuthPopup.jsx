@@ -19,9 +19,9 @@ export default function AuthPopup({ open, onClose }) {
       return;
     }
     setError("");
-    // Guardar el email en localStorage para control de sesión y permisos
+    // Guardar el email para control de sesión y permisos
     localStorage.setItem('userEmail', loginEmail);
-    // Aquí iría la lógica real de login
+   
     onClose();
   };
 
@@ -45,13 +45,13 @@ export default function AuthPopup({ open, onClose }) {
         return;
       }
       // Guardar usuario 
-      const res = await fetch('http://localhost:8000/usuarios', {
+      const res = await fetch('http://127.0.0.1:8000/clientes/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: registerName, email: registerEmail, password: registerPassword })
       });
       if (!res.ok) throw new Error('Error al registrar usuario');
-      // Guardar el email en localStorage para control de sesión y permisos
+      // Guardar el email
       localStorage.setItem('userEmail', registerEmail);
       onClose();
     } catch (err) {
