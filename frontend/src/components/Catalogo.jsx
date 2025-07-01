@@ -17,9 +17,17 @@ export default function Catalogo({ onAdd, carrito = [] }) {
       .then((res) => res.json())
       .then((data) => {
         // Verificar si data es un array o un objeto con productos
-        if (Array.isArray(data)) setProductos(data);
-        else if (data && Array.isArray(data.productos)) setProductos(data.productos);
-        else setProductos([]);
+        let productosRaw = [];
+        if (Array.isArray(data)) productosRaw = data;
+        else if (data && Array.isArray(data.productos)) productosRaw = data.productos;
+        // Eliminar duplicados por codigo_prod
+        const productosUnicos = Object.values(
+          productosRaw.reduce((acc, prod) => {
+            acc[prod.codigo_prod] = prod;
+            return acc;
+          }, {})
+        );
+        setProductos(productosUnicos);
       })
       .catch(() => setProductos([]));
     fetch(SUCURSAL_URL)
