@@ -11,3 +11,4 @@ from .pago_exitoso import PagoExitoso
 from .pago_fallido import PagoFallido
 from .pago_pendiente import PagoPendiente
 from .estadoOrden_view import EstadoOrdenViewSet
+from .auth_view import LoginView
