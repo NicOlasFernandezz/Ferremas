@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const regiones = [
@@ -36,6 +36,38 @@ export default function FinalizarCompra() {
   const [tarjeta, setTarjeta] = useState({ numero: "", nombre: "", vencimiento: "", cvv: "" });
   const [deposito, setDeposito] = useState({ banco: "", titular: "", rut: "", comprobante: null });
   const [enviado, setEnviado] = useState(false);
+  // Estados para sucursales
+  const [sucursales, setSucursales] = useState([]);
+  const [sucursalSeleccionada, setSucursalSeleccionada] = useState("");
+  const [loadingSucursales, setLoadingSucursales] = useState(false);
+
+  // Cargar sucursales cuando se selecciona retiro en tienda
+  useEffect(() => {
+    if (retiro === "retiro") {
+      setLoadingSucursales(true);
+      fetch('http://127.0.0.1:8000/sucursal/')
+        .then(res => {
+          if (!res.ok) throw new Error("Error al cargar sucursales");
+          return res.json();
+        })
+        .then(data => {
+          let sucursalesArray = [];
+          if (Array.isArray(data)) {
+            sucursalesArray = data;
+          } else if (Array.isArray(data.sucursales)) {
+            sucursalesArray = data.sucursales;
+          } else if (Array.isArray(data.results)) {
+            sucursalesArray = data.results;
+          }
+          setSucursales(sucursalesArray);
+          setLoadingSucursales(false);
+        })
+        .catch(err => {
+          console.error('Error al cargar sucursales:', err);
+          setLoadingSucursales(false);
+        });
+    }
+  }, [retiro]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,11 +77,12 @@ export default function FinalizarCompra() {
       total,
       contacto,
       retiro,
-      region,
+      sucursal: retiro === "retiro" ? sucursalSeleccionada : undefined,
+      region: retiro === "envio" ? region : undefined,
       nombre,
-      direccion,
-      codigoPostal,
-      comuna,
+      direccion: retiro === "envio" ? direccion : undefined,
+      codigoPostal: retiro === "envio" ? codigoPostal : undefined,
+      comuna: retiro === "envio" ? comuna : undefined,
       telefono,
       pago,
       tarjeta: pago === 'tarjeta' ? tarjeta : undefined,
@@ -113,17 +146,48 @@ export default function FinalizarCompra() {
               <input type="radio" name="retiro" value="envio" checked={retiro === "envio"} onChange={() => setRetiro("envio")} /> Envío a domicilio
             </label>
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <select value={region} onChange={e => setRegion(e.target.value)} required style={{ width: '100%', padding: 8 }}>
-              <option value="">Selecciona región</option>
-              {regiones.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-          </div>
-          <input type="text" placeholder="Nombre completo" value={nombre} onChange={e => setNombre(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
-          <input type="text" placeholder="Dirección" value={direccion} onChange={e => setDireccion(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
-          <input type="text" placeholder="Código postal" value={codigoPostal} onChange={e => setCodigoPostal(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
-          <input type="text" placeholder="Comuna" value={comuna} onChange={e => setComuna(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
-          <input type="tel" placeholder="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+          
+          {retiro === "retiro" ? (
+            // Mostrar selector de sucursales para retiro en tienda
+            <div>
+              {loadingSucursales ? (
+                <div style={{ padding: 12, textAlign: 'center', color: '#1976d2' }}>Cargando sucursales...</div>
+              ) : (
+                <div style={{ marginBottom: 12 }}>
+                  <select 
+                    value={sucursalSeleccionada} 
+                    onChange={e => setSucursalSeleccionada(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: 8 }}
+                  >
+                    <option value="">Selecciona una sucursal</option>
+                    {sucursales.map(s => (
+                      <option key={s.id} value={s.id}>
+                        {s.nombre} - {s.comuna} - {s["dirección"]} {s.numero}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <input type="text" placeholder="Nombre completo" value={nombre} onChange={e => setNombre(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+              <input type="tel" placeholder="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+            </div>
+          ) : (
+            // Mostrar campos completos para envío a domicilio
+            <div>
+              <div style={{ marginBottom: 12 }}>
+                <select value={region} onChange={e => setRegion(e.target.value)} required style={{ width: '100%', padding: 8 }}>
+                  <option value="">Selecciona región</option>
+                  {regiones.map(r => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </div>
+              <input type="text" placeholder="Nombre completo" value={nombre} onChange={e => setNombre(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+              <input type="text" placeholder="Dirección" value={direccion} onChange={e => setDireccion(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+              <input type="text" placeholder="Código postal" value={codigoPostal} onChange={e => setCodigoPostal(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+              <input type="text" placeholder="Comuna" value={comuna} onChange={e => setComuna(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+              <input type="tel" placeholder="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} required style={{ width: '100%', marginBottom: 12, padding: 8 }} />
+            </div>
+          )}
         </div>
         <div style={{border: '1.5px solid #d0d0d0', borderRadius: 10, padding: 22, marginBottom: 24, background: '#f6f8fa'}}>
           <h3>Método de pago</h3>
