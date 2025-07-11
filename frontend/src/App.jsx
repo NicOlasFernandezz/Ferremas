@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Catalogo from './components/Catalogo';
 import Carrito from './components/Carrito';
 import AdminProductos from './components/AdminProductos';
+import AdminEmpleados from './components/AdminEmpleados';
 import MiCarrito from './components/MiCarrito';
 import FinalizarCompra from './components/FinalizarCompra';
 import Sucursales from './components/Sucursales';
@@ -80,6 +81,16 @@ function Admin() {
   return <AdminProductos />;
 }
 
+function AdminEmpleadosPage() {
+  // Obtener el email del usuario 
+  const email = localStorage.getItem('userEmail');
+  // Solo permitir acceso si el email es de admin
+  if (!email || !email.endsWith('@admin.com')) {
+    return <h2 style={{textAlign:'center',marginTop:'3rem',color:'#c00'}}>Acceso denegado: solo administradores</h2>;
+  }
+  return <AdminEmpleados />;
+}
+
 function App() {
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
@@ -148,6 +159,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/catalogo" element={<Catalogo onAdd={agregarAlCarrito} carrito={carrito} />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/empleados" element={<AdminEmpleadosPage />} />
           <Route path="/mi-carrito" element={<MiCarrito carrito={carrito} onRemove={eliminarDelCarrito} onClear={vaciarCarrito} onUpdateQty={actualizarCantidad} />} />
           <Route path="/finalizar-compra" element={<FinalizarCompra carrito={carrito} total={carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)} />} />
           <Route path="/sucursales" element={<Sucursales />} />

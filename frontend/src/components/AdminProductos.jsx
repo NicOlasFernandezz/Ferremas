@@ -130,13 +130,21 @@ function AdminProductos() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Admin Productos</h2>
-      <button style={{ marginBottom: 16 }} onClick={async () => {
-        if (!mostrarPedidos) await fetchPedidos();
-        setMostrarPedidos(!mostrarPedidos);
-      }}>
-        {mostrarPedidos ? 'Ocultar Pedidos' : 'Ver Pedidos'}
-      </button>
+      <h2>Panel de Administrador</h2>
+      <div style={{ marginBottom: 16, display: 'flex', gap: 12 }}>
+        <button style={{ padding: '8px 16px', background: '#004080', color: '#fff', border: 'none', borderRadius: 4 }} onClick={async () => {
+          if (!mostrarPedidos) await fetchPedidos();
+          setMostrarPedidos(!mostrarPedidos);
+        }}>
+          {mostrarPedidos ? 'Ocultar Pedidos' : 'Ver Pedidos'}
+        </button>
+        <button 
+          style={{ padding: '8px 16px', background: '#28a745', color: '#fff', border: 'none', borderRadius: 4 }} 
+          onClick={() => window.location.href = '/admin/empleados'}
+        >
+          Gestionar Empleados
+        </button>
+      </div>
       {mostrarPedidos && (
         <div style={{ marginBottom: 24 }}>
           <h3>Pedidos Realizados</h3>
@@ -187,6 +195,7 @@ function AdminProductos() {
           )}
         </div>
       )}
+      <h3>Gestión de Productos</h3>
       <form onSubmit={handleCreate} style={{ marginBottom: 20, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
         <input name="codigo_prod" placeholder="Código" value={nuevoProducto.codigo_prod} onChange={handleChange} required style={{ minWidth: 80 }} />
         <input name="nombre" placeholder="Nombre" value={nuevoProducto.nombre} onChange={handleChange} required style={{ minWidth: 120 }} />

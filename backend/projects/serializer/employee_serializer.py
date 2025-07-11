@@ -17,7 +17,7 @@ class EmpleadoSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Empleado
-        fields = ['user', 'rut', 'nombre', 'apellido', 'direccion', 'celular', 'is_active', 'cargo', 'cargo_id', 'must_change_password', 'email', 'email_user']
+        fields = ['id', 'user', 'rut', 'nombre', 'apellido', 'direccion', 'celular', 'is_active', 'cargo', 'cargo_id', 'must_change_password', 'email', 'email_user']
 
     def get_email_user(self, obj):
         return obj.user.email if obj.user else None
@@ -56,3 +56,16 @@ class EmpleadoSerializer(serializers.ModelSerializer):
         
         empleado = Empleado.objects.create(**validated_data)
         return empleado
+
+    def update(self, instance, validated_data):
+        # Actualizar los campos del empleado
+        instance.rut = validated_data.get('rut', instance.rut)
+        instance.nombre = validated_data.get('nombre', instance.nombre)
+        instance.apellido = validated_data.get('apellido', instance.apellido)
+        instance.direccion = validated_data.get('direccion', instance.direccion)
+        instance.celular = validated_data.get('celular', instance.celular)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.cargo = validated_data.get('cargo', instance.cargo)
+        instance.save()
+        
+        return instance
